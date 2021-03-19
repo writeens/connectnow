@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
 import Select from 'react-select';
 
 /// OPTION FOR REACT-SELECT
 const orderByOptions = [
+  { value: '', label: 'Select' },
   { value: 'release', label: 'Release Date' },
   { value: 'score', label: 'Score' },
   { value: 'name', label: 'Name' },
@@ -11,10 +13,12 @@ const orderByOptions = [
 ];
 
 /// CUSTOM SELECT COMPONENT
-const CustomSelect = ({ options, onSelect }:{options?:{}[], onSelect:Function}) => {
+const CustomSelect = ({ options, onSelect, entry }
+  :{options?:{}[], onSelect:Function, entry:{}}) => {
   const handleChange = (value:any) => {
     onSelect(value);
   };
+  console.log(entry);
   return (
     <div className="flex-1">
       <Select
@@ -22,6 +26,7 @@ const CustomSelect = ({ options, onSelect }:{options?:{}[], onSelect:Function}) 
         classNamePrefix="order-select"
         isClearable={false}
         name="order"
+        value={entry}
         options={options}
         onChange={handleChange}
       />
@@ -39,16 +44,24 @@ const Filter = ({
   handleChangeOrder,
   isAscending,
   changeDirection,
+  handleClear,
+  name,
+  score,
+  order,
 }
   :{handleChangeName:Function,
     handleChangeScore:Function,
     handleChangeOrder:Function,
     changeDirection:Function,
     isAscending:boolean,
+    handleClear:Function,
+    name:string,
+  score:number,
+  order:{},
   }) => {
   /// USER SELECTS AN ITEM FROM THE ORDER BY DROPDOWN
   const handleUserSelectsItem = (option:{value:string}) => {
-    handleChangeOrder(option.value);
+    handleChangeOrder(option);
   };
 
   return (
@@ -58,6 +71,7 @@ const Filter = ({
         <p className="text-sm mb-1">Name</p>
         <input
           id="name"
+          value={name}
           type="text"
           className=" bg-c-stone w-full text-sm h-10 pl-2"
           placeholder="Please enter a name"
@@ -69,6 +83,7 @@ const Filter = ({
           <p className="text-sm mb-1">Minimum Score</p>
           <input
             id="score"
+            value={score}
             type="number"
             max={100}
             min={1}
@@ -87,6 +102,7 @@ const Filter = ({
             <CustomSelect
               options={orderByOptions}
               onSelect={handleUserSelectsItem}
+              entry={order}
             />
           </div>
         </div>
@@ -94,6 +110,7 @@ const Filter = ({
       <button
         type="button"
         className=" bg-c-accent-blue text-sm self-end px-6 py-1"
+        onClick={() => handleClear()}
       >
         Clear
 

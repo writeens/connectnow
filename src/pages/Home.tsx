@@ -13,7 +13,7 @@ const Home = () => {
   const [allEntries, setAllEntries] = useState(initialEntries);
   const [filteredContent, setFilteredContent] = useState(initialEntries);
   const [name, setName] = useState('');
-  const [order, setOrder] = useState('');
+  const [order, setOrder] = useState({ value: '', label: 'Select' });
   const [score, setScore] = useState(0);
   const [isAscending, setIsAscending] = useState(true);
 
@@ -29,6 +29,14 @@ const Home = () => {
     }
   };
 
+  /// HANDLE CLEAR
+  const handleClear = async () => {
+    setName('');
+    setOrder({ value: '', label: 'Select' });
+    setScore(0);
+    setIsAscending(true);
+  };
+
   /// ON MOUNT
   /// FETCH
   useEffect(() => {
@@ -37,26 +45,26 @@ const Home = () => {
 
   /// FILTER
   useEffect(() => {
-    if (name === '' && score === 0 && order === '') {
+    if (name === '' && score === 0 && order.value === '') {
       return setFilteredContent(allEntries);
     }
     let newContent = allEntries
       .filter((entry) => (name ? entry.name.toLowerCase().includes(name.toLowerCase()) : true))
       .filter((entry) => (score ? `${Math.floor(entry.rating)}`.includes(`${score}`) : true));
 
-    if (order === 'release') {
+    if (order.value === 'release') {
       newContent = newContent.sort((a, b) => (isAscending
         ? b.first_release_date - a.first_release_date
         : a.first_release_date - b.first_release_date));
     }
 
-    if (order === 'score') {
+    if (order.value === 'score') {
       newContent = newContent.sort((a, b) => (isAscending
         ? b.rating - a.rating
         : a.rating - b.rating));
     }
 
-    if (order === 'name') {
+    if (order.value === 'name') {
       newContent = newContent.sort((a, b) => {
         const nameA = a.name.toUpperCase();
         const nameB = b.name.toUpperCase();
@@ -90,9 +98,13 @@ const Home = () => {
           <Filter
             handleChangeName={(value:string) => setName(value)}
             handleChangeScore={(value:number) => setScore(value)}
-            handleChangeOrder={(value:string) => setOrder(value)}
+            handleChangeOrder={(item:{value:string, label:string}) => setOrder(item)}
+            name={name}
+            score={score}
+            order={order}
             isAscending={isAscending}
             changeDirection={() => setIsAscending((prev) => !prev)}
+            handleClear={handleClear}
           />
           <Content data={filteredContent} />
         </div>
