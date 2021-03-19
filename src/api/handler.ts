@@ -15,8 +15,6 @@ const fetchData = async ()
   try {
     const response = await axios.get(' https://public.connectnow.org.uk/applicant-test/');
 
-    console.log(response.data);
-
     return { status: 'OK', message: 'success', data: response.data };
   } catch (e) {
     console.log(e);
