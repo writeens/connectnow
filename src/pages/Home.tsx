@@ -15,6 +15,7 @@ const Home = () => {
   const [name, setName] = useState('');
   const [order, setOrder] = useState('');
   const [score, setScore] = useState(0);
+  const [isAscending, setIsAscending] = useState(true);
 
   /// FETCH DATA IN COMPONENT
   const handleFetch = async () => {
@@ -44,21 +45,34 @@ const Home = () => {
       .filter((entry) => (score ? `${Math.floor(entry.rating)}`.includes(`${score}`) : true));
 
     if (order === 'release') {
-      newContent = newContent.sort((a, b) => b.first_release_date - a.first_release_date);
+      newContent = newContent.sort((a, b) => (isAscending
+        ? b.first_release_date - a.first_release_date
+        : a.first_release_date - b.first_release_date));
     }
 
     if (order === 'score') {
-      newContent = newContent.sort((a, b) => b.rating - a.rating);
+      newContent = newContent.sort((a, b) => (isAscending
+        ? b.rating - a.rating
+        : a.rating - b.rating));
     }
 
     if (order === 'name') {
       newContent = newContent.sort((a, b) => {
         const nameA = a.name.toUpperCase();
         const nameB = b.name.toUpperCase();
-        if (nameA < nameB) {
-          return -1;
+        if (isAscending) {
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
         }
         if (nameA > nameB) {
+          return -1;
+        }
+        if (nameA < nameB) {
           return 1;
         }
         return 0;
@@ -66,7 +80,7 @@ const Home = () => {
     }
 
     setFilteredContent(newContent);
-  }, [name, score, order, allEntries]);
+  }, [name, score, order, allEntries, isAscending]);
 
   return (
     <div className="bg-gradient-to-b from-c-light-blue to-c-dark-blue w-screen py-4 px-4 md:px-8 lg:px-20 md:pt-8 lg:pt-16 text-c-gray min-h-screen">
@@ -77,6 +91,8 @@ const Home = () => {
             handleChangeName={(value:string) => setName(value)}
             handleChangeScore={(value:number) => setScore(value)}
             handleChangeOrder={(value:string) => setOrder(value)}
+            isAscending={isAscending}
+            changeDirection={() => setIsAscending((prev) => !prev)}
           />
           <Content data={filteredContent} />
         </div>

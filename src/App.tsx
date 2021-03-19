@@ -1,9 +1,9 @@
 import React from 'react';
-import Home from './pages/Home';
+import CustomRouter from './router/CustomRouter';
 
 function App() {
   return (
-    <Home />
+    <CustomRouter />
   );
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BsArrowUp } from 'react-icons/bs';
+import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
 import Select from 'react-select';
 
 /// OPTION FOR REACT-SELECT
@@ -33,10 +33,19 @@ CustomSelect.defaultProps = {
   options: [],
 };
 
-const Filter = ({ handleChangeName, handleChangeScore, handleChangeOrder }
+const Filter = ({
+  handleChangeName,
+  handleChangeScore,
+  handleChangeOrder,
+  isAscending,
+  changeDirection,
+}
   :{handleChangeName:Function,
     handleChangeScore:Function,
-    handleChangeOrder:Function}) => {
+    handleChangeOrder:Function,
+    changeDirection:Function,
+    isAscending:boolean,
+  }) => {
   /// USER SELECTS AN ITEM FROM THE ORDER BY DROPDOWN
   const handleUserSelectsItem = (option:{value:string}) => {
     handleChangeOrder(option.value);
@@ -72,10 +81,13 @@ const Filter = ({ handleChangeName, handleChangeScore, handleChangeOrder }
         <div className="lg:mb-16 flex-1">
           <p className="text-sm mb-1">Order By</p>
           <div className="flex-row flex">
-            <div className="bg-c-accent-blue flex justify-center items-center w-10 h-10">
-              <BsArrowUp size="25" color="white" />
-            </div>
-            <CustomSelect options={orderByOptions} onSelect={handleUserSelectsItem} />
+            <button type="button" onClick={() => changeDirection()} className="bg-c-accent-blue outline-none focus:outline-none flex justify-center items-center w-10 h-10">
+              {isAscending ? <BsArrowUp size="25" color="white" /> : <BsArrowDown size="25" color="white" />}
+            </button>
+            <CustomSelect
+              options={orderByOptions}
+              onSelect={handleUserSelectsItem}
+            />
           </div>
         </div>
       </div>
