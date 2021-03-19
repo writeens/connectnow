@@ -2,6 +2,7 @@ import React from 'react';
 import { BsArrowUp } from 'react-icons/bs';
 import Select from 'react-select';
 
+/// OPTION FOR REACT-SELECT
 const orderByOptions = [
   { value: 'release', label: 'Release Date' },
   { value: 'score', label: 'Score' },
@@ -9,8 +10,8 @@ const orderByOptions = [
 
 ];
 
+/// CUSTOM SELECT COMPONENT
 const CustomSelect = ({ options, onSelect }:{options?:{}[], onSelect:Function}) => {
-  console.log('object');
   const handleChange = (value:any) => {
     onSelect(value);
   };
@@ -32,10 +33,13 @@ CustomSelect.defaultProps = {
   options: [],
 };
 
-const Filter = () => {
+const Filter = ({ handleChangeName, handleChangeScore, handleChangeOrder }
+  :{handleChangeName:Function,
+    handleChangeScore:Function,
+    handleChangeOrder:Function}) => {
   /// USER SELECTS AN ITEM FROM THE ORDER BY DROPDOWN
-  const handleUserSelectsItem = (value:{}|null) => {
-    console.log(value);
+  const handleUserSelectsItem = (option:{value:string}) => {
+    handleChangeOrder(option.value);
   };
 
   return (
@@ -43,12 +47,27 @@ const Filter = () => {
       <p className="mb-6 md:mb-12 text-lg ">Filter Results</p>
       <label htmlFor="name" className="mb-6 md:mb-12">
         <p className="text-sm mb-1">Name</p>
-        <input id="name" type="text" className=" bg-c-stone w-full text-sm h-10 pl-2" placeholder="Please enter a name" />
+        <input
+          id="name"
+          type="text"
+          className=" bg-c-stone w-full text-sm h-10 pl-2"
+          placeholder="Please enter a name"
+          onChange={(e) => handleChangeName(e.target.value)}
+        />
       </label>
       <div className="flex-col md:flex-row lg:flex-col flex lg:mb-0 mb-8">
         <label htmlFor="score" className=" mb-8 md:mb-0 lg:mb-12 w-full md:w-64 lg:w-auto lg:mr-0 mr-8">
           <p className="text-sm mb-1">Minimum Score</p>
-          <input id="score" type="number" max={10} min={1} className=" bg-c-stone w-full text-sm h-10 pl-2" placeholder="Please enter a minimum score" />
+          <input
+            id="score"
+            type="number"
+            max={100}
+            min={1}
+            maxLength={2}
+            className=" bg-c-stone w-full text-sm h-10 pl-2"
+            placeholder="Please enter a minimum score"
+            onChange={(e) => handleChangeScore(e.target.value)}
+          />
         </label>
         <div className="lg:mb-16 flex-1">
           <p className="text-sm mb-1">Order By</p>
